@@ -129,12 +129,13 @@ class GameManager:
 
     def check_bombardment(self):
         if random.random() < 0.15:  # 10% шанс на обстрел каждый час
-            self.house.bombard()
+
 
 
             print('-----------------------')
             time.sleep(0.2)
             print("\tПрилет! Дом и персонажи получили урон.")
+            self.house.bombard()
             for character in self.characters:
                 if character.in_basement():
                     continue
@@ -292,7 +293,7 @@ class GameManager:
             print(
                 "Вокруг по-прежнему остаются разрушения, но теперь перед вами стоит новая задача — восстановление вашего дома и жизни.")
             time.sleep(2)
-            print(а"Эти {self.days_to_survive} дней навсегда изменят ваше восприятие мира. Вы поняли ценность семьи, дома и мирной жизни.")
+            print(f"Эти {self.days_to_survive} дней навсегда изменят ваше восприятие мира. Вы поняли ценность семьи, дома и мирной жизни.")
             time.sleep(1)
             print("Ваше следующее лето будет уже другим. Но сейчас, главное — вы вместе и выжили. И это новое начало.")
 
