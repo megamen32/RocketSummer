@@ -12,7 +12,7 @@ class GameManager:
         self.current_hour = 1
         self.hours_in_a_day = 5  # Максимум действий, которые могут выполнить персонажи; одно действие занимает 1 час.
         self.current_day = 1
-        self.days_to_survive = 20
+        self.days_to_survive = 27
         self.characters = [Character(self,"Мама",8), Character(self,"Папа",10), Character(self,"Брат",4), Character(self,"Ты",6)]
         self.food_storage = FoodStorage(self)
         self.fuel_storage = FoodStorage(self,'Гараж')
@@ -83,7 +83,7 @@ class GameManager:
                     elif resource==2:
                         resource='топливо'
                         storage=self.fuel_storage
-                    result = character.gather_food(storage,resource_type=resource)
+                    result = character.gather_resources(storage,resource_type=resource)
                 elif action_type == "починить дом":
                     result = self.house.repair()
                 elif action_type =='починить холодильник':
@@ -266,7 +266,7 @@ class GameManager:
                 "Никто не выжил. Ваша история заканчивается здесь, в трагедии и разрушении. Это напоминает о жестокости ситуации, с которой вы столкнулись.")
             good_end = False
         if good_end:
-            print("Вы смогли выжить 20 дней в условиях бесконечных испытаний и неопределенности.")
+            print(f"Вы смогли выжить {self.days_to_survive} дней в условиях бесконечных испытаний и неопределенности.")
             time.sleep(2)
             print("Как только тревоги стали реже, мы смогли наконец выдохнуть с облегчением.")
             time.sleep(1)

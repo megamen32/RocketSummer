@@ -7,11 +7,17 @@ class Fuel:
         self.amount=amount
         self.name=name
         self.manager=manager
+
     @classmethod
-    def generate(cls,manager):
-        names = ['Бензин', 'Дрова']
+    def generate(cls, manager):
+        names = [
+            'Бензин', 'Дрова', 'Уголь', 'Газ', 'Биотопливо', 'Керосин', 'Спирт', 'Торф',
+            'Пеллеты', 'Мазут', 'Водород', 'Этанол', 'Метан', 'Пропан', 'Бутан',
+            'Жидкое топливо', 'Сжатый природный газ', 'Сжиженный нефтяной газ', 'Дизельное топливо',
+            'Авиационный керосин'
+        ]
         amount = random.randint(1, 3)
-        return cls(manager,random.choice(names), amount)
+        return cls(manager, random.choice(names), amount)
 
     def __str__(self):
         txt = f"Топливо {self.name} +{self.amount}"
@@ -44,11 +50,15 @@ class Food:
         return expire_rate
 
     @classmethod
-    def generate(self,manager)-> 'Food':
-        names = ['Помидор', 'Яблоко', 'Огурец','Свинина','Курятина','Макароны']
+    def generate(cls, manager):
+        names = [
+            'Помидор', 'Яблоко', 'Огурец', 'Свинина', 'Курятина', 'Макароны', 'Картофель',
+            'Морковь', 'Капуста', 'Лук', 'Чеснок', 'Банан', 'Груша', 'Слива', 'Вишня',
+            'Говядина', 'Рыба', 'Яйца', 'Молоко', 'Сыр'
+        ]
         amount = random.randint(1, 5)
         expire_in_days = random.randint(2, 14)
-        return Food(manager,random.choice(names), amount=amount, expire_in_days=expire_in_days)
+        return cls(manager, random.choice(names), amount, expire_in_days)
 
     def __str__(self):
         txt= f"Еда {self.name} +{self.amount}"
