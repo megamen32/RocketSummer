@@ -32,12 +32,16 @@ class Food:
         self.storage=None
         self.is_expired=False
     def new_day(self):
-        expire_rate=self.expire_rate if self.storage and self.storage.is_working else self.expire_rate_not_in_fridge
+        expire_rate = self.cur_expire_rate()
         self.expire_progress+=expire_rate
         if self.expire_progress>=1:
             self.amount=0
             self.is_expired=True
             self.expire_progress=1
+
+    def cur_expire_rate(self):
+        expire_rate = self.expire_rate if self.storage and self.storage.is_working() else self.expire_rate_not_in_fridge
+        return expire_rate
 
     @classmethod
     def generate(self,manager)-> 'Food':
@@ -48,6 +52,6 @@ class Food:
 
     def __str__(self):
         txt= f"Еда {self.name} +{self.amount}"
-        if self.expire_progress>0:
-             txt+=f": {self.expire_progress*100:.1f}% испорченность"
+
+        txt+=f": испортиться через {(1-self.expire_progress)/self.cur_expire_rate():.1f} дней"
         return txt

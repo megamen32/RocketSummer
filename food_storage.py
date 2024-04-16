@@ -50,3 +50,7 @@ class FoodStorage:
         for index, food in enumerate((self.food), 1):
             print(f"{index}. {food}")
         print(self.__str__())
+    def clear_trash(self):
+        self.food=[food for food in self.food if not food.is_expired]
+        print('Все протухшие продукты были выкинуты')
+        return True

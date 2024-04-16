@@ -1,6 +1,5 @@
 import random
-
-
+import time
 
 
 class Character:
@@ -81,6 +80,7 @@ class Character:
                 txt+=f'. Но {random.choice(statuses)}'
             print(txt)
             if health_consumed:
+                time.sleep(1)
                 self.take_damage(health_consumed)
             return True
         return False

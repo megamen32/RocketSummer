@@ -74,6 +74,8 @@ class GameManager:
                     result = self.house.generator.turn_on()
                 elif action_type == 'выключить генератор':
                     result = self.house.generator.turn_off()
+                elif action_type=='выкинуть мусор':
+                    result=self.fuel_storage.clear_trash()
 
 
         if result:
@@ -107,7 +109,7 @@ class GameManager:
                     print('Холодильник выведен из строя')
             print('💥')
     def check_elictricity(self):
-        if self.house.electricity_from_outside and random.random()<0.9:
+        if self.house.electricity_from_outside and random.random()<0.2:
             print('-----------------------')
             time.sleep(0.2)
             self.house.electricity_from_outside=False
@@ -117,6 +119,7 @@ class GameManager:
             print('-----------------------')
             self.house.electricity_from_outside = True
             print('\tЭлектричество снова дали!')
+
             return
 
 
@@ -141,16 +144,15 @@ class GameManager:
                 input_action_txt = f"Выбери действие (покушать-1, собрать ресурсы-2, починить дом-3, проверить холодильник-4 "
                 if  self.food_storage._hp==0:
                     input_action_txt += ', починить холодильник-5'
-                
+
                 input_action_txt+=', спрятаться в подвал-6'
-                can_turn_off_generator=self.house.generator.is_turned_on
-                if not can_turn_off_generator:
+                if not self.house.generator.is_turned_on:
                     can_turn_on_generator=not self.house.electricity_from_outside
                     if can_turn_on_generator:
                         if not self.house.generator.is_turned_on_and_working():
                             input_action_txt+=', включить генератор-9'
-                        else:
-                            input_action_txt += ', выключить генератор-0'
+                if self.house.generator.is_turned_on:
+                        input_action_txt += ', выключить генератор-0'
                 input_action_txt+=', проверить гараж - 8'
             input_action_txt+='):'
 
@@ -181,7 +183,12 @@ class GameManager:
                 pass
             if action_choice=='проверить холодильник':
                 self.food_storage.status()
-                action_performed=True
+                if any([food.is_expired for food in self.food_storage.food ]):
+                    trash_out=int(input("Выкинуть мусор? 1-да, 2-нет"))
+                    if trash_out==1:
+                        action_performed=self.perform_action(character_choice - 1, 'выкинуть мусор')
+                    else:
+                        action_performed=True
             elif action_choice=='проверить гараж':
                 self.fuel_storage.status()
                 action_performed=True
