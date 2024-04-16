@@ -21,7 +21,7 @@ class Character:
         if self.health<0:
             self.dead=True
             self.health=-1
-            txt+='и погиб'
+            txt+=' и погиб'
         else:
             txt+=f', осталось {self.health}hp / {self.max_health}hp'
         print(txt)

@@ -18,9 +18,23 @@ class GameManager:
         self.fuel_storage = FoodStorage(self,'Гараж')
         self.house = House(self)
         self.today_action_perfomed=0
-        self.max_action_to_perform=lambda : len([hero for hero in self.characters if hero.can_act()])
+        self.max_action_to_perform=lambda :max(1, len([hero for hero in self.characters if hero.can_act()]))
         self.today_can_perform_actions = self.max_action_to_perform()
+        self.news = [
+            "Местные власти сообщают об ухудшении погодных условий.",
+            "В новостях объявили о возможных перебоях с электричеством из-за ближайших боев.",
+            "Соседний город подвергся массированной атаке. Жители в панике.",
+            "Гуманитарная помощь скоро должна прибыть в ближайшие дни.",
+            "Вчера вечером был сбит вражеский беспилотник над городом.",
+            "Мирные переговоры начнутся в следующую неделю, сообщают источники.",
+            "Жители города организуют общественную оборону."
+        ]
 
+
+    def broadcast_news(self):
+        # Выбор случайной новости из списка
+        news_of_the_day = random.choice(self.news)
+        print(f"Новости дня: {news_of_the_day}")
 
     def new_day(self):
         self.check_elictricity()
@@ -31,6 +45,7 @@ class GameManager:
         for food in all_food:
             food.new_day()
         self.house.generator.new_day()
+        self.broadcast_news()
 
 
     def perform_action(self, character_index, action_type):
@@ -135,6 +150,9 @@ class GameManager:
         self.display_status()
         action_performed = False
         while not action_performed:
+            end=self.check_end_day()
+            if end:
+                break
             character_choice = int(input("Выбери персонажа (1-4): "))
 
 
@@ -194,10 +212,48 @@ class GameManager:
                 action_performed=True
             else:
                 action_performed = self.perform_action(character_choice-1, action_choice)
-        if self.current_hour > self.hours_in_a_day or self.today_action_perfomed>=self.today_can_perform_actions:
+        if self.check_end_day():
             print("Конец дня")
             self.new_day()
             time.sleep(1)
+
+    def check_end_day(self):
+        if self.current_hour > self.hours_in_a_day or self.today_action_perfomed >= self.today_can_perform_actions:
+
+            return True
+        return False
+
+    def check_endings(self):
+        alive_count = sum(not char.dead for char in self.characters)
+        total_count = len(self.characters)
+
+        print("Конец игры.")
+        print(f"Выжило {alive_count} из {total_count} членов семьи.")
+        good_end = True
+        if alive_count == total_count:
+            print(
+                "Все члены семьи выжили. Вы блестяще справились с испытаниями и сумели сохранить свою семью в целости и безопасности.")
+        elif alive_count >= total_count // 2:
+            print(
+                "Большинство членов вашей семьи выжило. Несмотря на потери, вы смогли сохранить ядро семьи и теперь впереди у вас время для восстановления и взаимопомощи.")
+        elif alive_count > 0:
+            print(
+                "Выжило несколько членов семьи. Потери огромны, и это оставит след в ваших сердцах, но вы должны идти дальше.")
+        else:
+            print(
+                "Никто не выжил. Ваша история заканчивается здесь, в трагедии и разрушении. Это напоминает о жестокости ситуации, с которой вы столкнулись.")
+            good_end = False
+        if good_end:
+            print("Вы смогли выжить 20 дней в условиях бесконечных испытаний и неопределенности.")
+            time.sleep(2)
+            print("Как только тревоги стали реже, мы смогли наконец выдохнуть с облегчением.")
+            time.sleep(1)
+            print(
+                "Вокруг по-прежнему остаются разрушения, но теперь перед вами стоит новая задача — восстановление вашего дома и жизни.")
+            time.sleep(2)
+            print("Эти 20 дней навсегда изменят ваше восприятие мира. Вы поняли ценность семьи, дома и мирной жизни.")
+            time.sleep(1)
+            print("Ваше следующее лето будет уже другим. Но сейчас, главное — вы вместе и выжили. И это новое начало.")
 
     # Пример использования
 manager = GameManager()
