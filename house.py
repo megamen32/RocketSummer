@@ -3,15 +3,15 @@ import random
 class Generator():
     def __init__(self,manager):
         self.is_turned_on=False
-        self.is_malfunction=False
+        self.is_malfunction=lambda :manager.fuel_storage._hp==0
         self.current_fuel=None
         self.manager=manager
     def is_turned_on_and_working(self):
-        return self.is_turned_on and not self.is_malfunction
+        return self.is_turned_on and not self.is_malfunction()
     def turn_on(self):
         if self.is_turned_on:
             return False
-        if self.is_malfunction:
+        if self.is_malfunction():
             return False
         if not self.current_fuel:
             self.manager.fuel_storage.status()  # Показать текущий статус холодильника и доступную еду
@@ -33,19 +33,20 @@ class Generator():
         else:
             self.is_turned_on = True
     def turn_off(self):
-        if not self.is_turned_on or self.is_malfunction:
+        if not self.is_turned_on:
             return False
         self.is_turned_on=False
         print('Генератор выключен')
 
     def new_day(self):
-        if self.current_fuel and self.is_turned_on:
+        if self.current_fuel and self.is_turned_on and not self.is_malfunction():
             self.current_fuel.amount-=1
             print(f'Генератор сжигает {self.current_fuel.name}, осталось {self.current_fuel.amount} дней')
             if self.current_fuel.amount<=0:
                 self.current_fuel=None
                 self.is_turned_on=False
-
+    def __str__(self):
+        return f"Генератор: {'исправен' if not self.is_malfunction() else 'сломан' }, {'включен'  if self.is_turned_on else 'выключен'}"
         
         
         
@@ -63,6 +64,8 @@ class House:
         self.durability -= random.randint(0,20)  # уменьшение прочности дома после обстрела
         if self.durability < 0:
             self.durability = 0
+            for character in self.manager.characters:
+                character.take_damage(100)
 
     def repair(self):
         if self.durability < 100:
@@ -74,4 +77,4 @@ class House:
         return False
 
     def __str__(self):
-        return f"Прочность дома: {self.durability}%,  Электричество {'в порядке' if self.electricity_from_outside else ('отлючено(включите генратор)' if not self.generator.is_turned_on_and_working() else 'от генератора')}, Генератор: {'включен'  if self.generator.is_turned_on else 'выключен'}\n{self.manager.food_storage}"
+        return f"Прочность дома: {self.durability}%,  Электричество {'в порядке' if self.electricity_from_outside else ('отлючено(включите генратор)' if not self.generator.is_turned_on_and_working() else 'от генератора')}, {self.generator}\n{self.manager.food_storage}"

@@ -1,7 +1,7 @@
 from gamemanager import manager
 import time
 
-def end_game(self):
+def end_game():
     manager.check_endings()
     exit()
 
@@ -18,7 +18,7 @@ if __name__ == '__main__':
     time.sleep(1)
     print("Так началось наше выживание...")
 
-    while manager.current_day < manager.days_to_survive:
+    while manager.current_day < manager.days_to_survive and any([not character.dead for character in manager.characters]):
         manager.player_action()
 
 

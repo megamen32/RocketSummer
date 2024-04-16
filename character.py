@@ -16,6 +16,8 @@ class Character:
     def can_act(self):
         return self.health>=2 and not self.dead and not self.in_basement()
     def take_damage(self,damage):
+        if self.dead:
+            return
         self.health-=damage
         txt=f'{self.name} получил {damage} урона'
         if self.health<0:

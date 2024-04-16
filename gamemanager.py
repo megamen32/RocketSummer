@@ -46,6 +46,11 @@ class GameManager:
             food.new_day()
         self.house.generator.new_day()
         self.broadcast_news()
+        for character in self.characters:
+           if character.health<=3:
+               damage=random.randint(0,1)/2
+               if damage:
+                  character.take_damage(damage)
 
 
     def perform_action(self, character_index, action_type):
@@ -83,6 +88,8 @@ class GameManager:
                     result = self.house.repair()
                 elif action_type =='починить холодильник':
                     result=self.food_storage.repair()
+                elif action_type =='починить генератор':
+                    result=self.fuel_storage.repair()
                 elif action_type == 'спрятаться в подвал':
                     result =character.hide_in_basement()
                 elif action_type == 'включить генератор':
@@ -102,7 +109,7 @@ class GameManager:
         return result
 
     def check_bombardment(self):
-        if random.random() < 0.1:  # 10% шанс на обстрел каждый час
+        if random.random() < 0.15:  # 10% шанс на обстрел каждый час
             self.house.bombard()
 
 
@@ -116,12 +123,16 @@ class GameManager:
                     continue
 
                 damage = random.randint(0, 2)
-                character.take_damage(damage)
+                if damage>0:
+                    character.take_damage(damage)
             time.sleep(0.5)
             if self.house.durability<90:
                 if random.random()<0.3:
                     self.food_storage._hp=0
                     print('Холодильник выведен из строя')
+                if random.random() < 0.3:
+                    self.fuel_storage._hp = 0
+                    print('Гараж выведен из строя')
             print('💥')
     def check_elictricity(self):
         if self.house.electricity_from_outside and random.random()<0.2:
@@ -153,7 +164,12 @@ class GameManager:
             end=self.check_end_day()
             if end:
                 break
-            character_choice = int(input("Выбери персонажа (1-4): "))
+            character_choice=-1
+            while character_choice<0 or character_choice>len(self.characters):
+                try:
+                    character_choice = int(input("Выбери персонажа (1-4): "))
+                except:
+                    print('Введите число от 1 до 4')
 
 
             if self.characters[character_choice-1].in_basement():
@@ -162,6 +178,8 @@ class GameManager:
                 input_action_txt = f"Выбери действие (покушать-1, собрать ресурсы-2, починить дом-3, проверить холодильник-4 "
                 if  self.food_storage._hp==0:
                     input_action_txt += ', починить холодильник-5'
+                if  self.fuel_storage._hp==0:
+                    input_action_txt += ', починить генератор-11'
 
                 input_action_txt+=', спрятаться в подвал-6'
                 if not self.house.generator.is_turned_on:
@@ -197,6 +215,8 @@ class GameManager:
                     action_choice = 'включить генератор'
                 elif action_choice==0:
                     action_choice = 'выключить генератор'
+                elif action_choice==11:
+                    action_choice='починить генератор'
             except:
                 pass
             if action_choice=='проверить холодильник':
@@ -213,6 +233,8 @@ class GameManager:
             else:
                 action_performed = self.perform_action(character_choice-1, action_choice)
         if self.check_end_day():
+            for i in range(self.hours_in_a_day-self.current_hour):
+                self.check_bombardment()
             print("Конец дня")
             self.new_day()
             time.sleep(1)
