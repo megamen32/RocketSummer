@@ -3,10 +3,10 @@ import time
 
 
 class Character:
-    def __init__(self,manager, name):
+    def __init__(self,manager, name,max_health):
         self.name = name
-        self.health = 5  # начальное состояние здоровья
-        self.max_health=10
+        self.health = max_health//2  # начальное состояние здоровья
+        self.max_health=max_health
         self.dead=False
         self.manager=manager
         self.location='В доме'# Подвал, Улица

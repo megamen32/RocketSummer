@@ -13,7 +13,7 @@ class GameManager:
         self.hours_in_a_day = 5  # Максимум действий, которые могут выполнить персонажи; одно действие занимает 1 час.
         self.current_day = 1
         self.days_to_survive = 20
-        self.characters = [Character(self,"Мама"), Character(self,"Папа"), Character(self,"Брат"), Character(self,"Ты")]
+        self.characters = [Character(self,"Мама",8), Character(self,"Папа",10), Character(self,"Брат",4), Character(self,"Ты",6)]
         self.food_storage = FoodStorage(self)
         self.fuel_storage = FoodStorage(self,'Гараж')
         self.house = House(self)
@@ -75,7 +75,7 @@ class GameManager:
                 elif action_type == 'выключить генератор':
                     result = self.house.generator.turn_off()
                 elif action_type=='выкинуть мусор':
-                    result=self.fuel_storage.clear_trash()
+                    result=self.food_storage.clear_trash()
 
 
         if result:
