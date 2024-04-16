@@ -26,7 +26,7 @@ class FoodStorage:
     def repair(self):
         if self._hp>0: return False
         self._hp=1
-        print(f'{self.name} починен')
+        print(f'{self.name if self.name=="Холодильник" else "Генератор" } починен')
         return True
 
     def consume_food(self):

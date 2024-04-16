@@ -151,7 +151,7 @@ class GameManager:
                     print('Холодильник выведен из строя')
                 if random.random() < 0.3:
                     self.fuel_storage._hp = 0
-                    print('Гараж выведен из строя')
+                    print('Генератор выведен из строя')
             print('💥')
     def check_elictricity(self):
         if self.house.electricity_from_outside and random.random()<0.2:
