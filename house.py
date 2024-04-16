@@ -37,6 +37,7 @@ class Generator():
             return False
         self.is_turned_on=False
         print('Генератор выключен')
+        return True
 
     def new_day(self):
         if self.current_fuel and self.is_turned_on and not self.is_malfunction():

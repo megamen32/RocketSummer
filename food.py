@@ -58,7 +58,7 @@ class Food:
         ]
         amount = random.randint(1, 5)
         expire_in_days = random.randint(2, 14)
-        return cls(manager, random.choice(names), amount, expire_in_days)
+        return cls(manager, random.choice(names), amount=amount, expire_in_days=expire_in_days)
 
     def __str__(self):
         txt= f"Еда {self.name} +{self.amount}"
